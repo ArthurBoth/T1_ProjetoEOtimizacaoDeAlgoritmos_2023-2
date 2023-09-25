@@ -1,96 +1,156 @@
 package Problem1;
 
+/**
+ * This class is a Java implementation of problem #1 from the algorithm's project and optimization class
+ * 
+ * Problem description:
+ * Vocês estão abrindo uma empresa de modelos generativos e precisam de recursos para desenvolver 'n' diferentes modelos.
+ * O membro do time que era (sim ele não faz mais parte do grupo) responsável por finanças, contratou 'n' empréstimos no valor de $ 1000 cada de vários bancos diferentes.
+ * 
+ * O valor dos empréstimos fica mais caro de acordo com o passar do tempo: em particular, o empréstimo 'j' aumenta por uma taxa de juros 'rj' > 1 em cada mês, onde 'rj' é um determinado parâmetro. Isso significa que se o empréstimo 'j' for pago daqui a 't' meses, vocês terão que devolver ao banco {1000 ∙ '(rj)^t'}.
+ * 
+ * Assumiremos que todas as taxas de juros são distintas; isto é, 'ri' != 'rj' para taxas 'i' != 'j'.
+ * 
+ * Problem:
+ * Dado que a empresa só tem recursos para pagar um empréstimo por mês, em que ordem ela deve pagar os empréstimos para que o valor total gasto seja o menor possível?
+ * 
+ * Forneça um algoritmo que considere as 'n' taxas de juros de preços 'r1', 'r2', […] , 'rn', e calcule uma ordem de pagamento dos empréstimos para que o valor total gasto seja minimizado. O tempo de execução do seu algoritmo deve ser polinomial em 'n'.
+ * 
+ * Solution:
+ * The solution for this problem is to pay the loan with the highest rate first. This way, the total amount spent will be the lowest possible.
+ * 
+ * Time complexity:
+ * O(n)
+ * 
+ * @author ArthurBoth
+ * @author felipefreitassilva
+ * @author GabrielFerreira39
+ * 
+ * @see Loan
+ */
 public class Problem1 {
-
-    /*
-     Vocês estão abrindo uma empresa de modelos generativos e precisam de recursos para desenvolver 'n'
-        diferentes modelos. O membro do time que era (sim ele não faz mais parte do grupo) responsável por
-        finanças, contratou 'n' empréstimos no valor de $ 1000 cada de vários bancos diferentes.
-
-     O valor dos empréstimos fica mais caro de acordo com o passar do tempo: em particular, o empréstimo 'j'
-        aumenta por uma taxa de juros 'rj' > 1 em cada mês, onde 'rj' é um determinado parâmetro. Isso significa que
-        se o empréstimo 'j' for pago daqui a 't' meses, vocês terão que devolver ao banco {1000 ∙ '(rj)^t'}.
-
-     Assumiremos que todas as taxas de juros são distintas; isto é, 'ri' != 'rj' para taxas 'i' != 'j'.
-
-     A questão é: dado que a empresa só tem recursos para pagar um empréstimo por mês, em que ordem ela
-        deve pagar os empréstimos para que o valor total gasto seja o menor possível?
-            R: O que possui a maior taxa de juros? Penso O(n) Entao implementei este.
-            R: O que possuirá o maior valor no próximo mês? Penso O(n^2)
-            Se presumirmos que todos os empréstimos foram feitos no mesmo mês, então o que possui a maior taxa de juros
-            é o que possuirá o maior valor no próximo mês, pois as bases são iguais (1000).
-
-     Forneça um algoritmo que considere as 'n' taxas de juros de preços 'r1', 'r2', […] , 'rn', e calcule uma ordem de
-        pagamento dos empréstimos para que o valor total gasto seja minimizado. O tempo de execução do seu
-        algoritmo deve ser polinomial em 'n'.
+    /**
+     * Number of loans
+     * 
+     * Defaults to 100
      */
+    private final int AMOUNT_OF_LOANS = 100;
+    /**
+     * Array of active loans (not payed)
+     */
+    private final Loan[] ACTIVE_LOANS = new Loan[AMOUNT_OF_LOANS];
+    /**
+     * Array of payed loans (already payed)
+     */
+    private final Loan[] PAYED_LOANS = new Loan[AMOUNT_OF_LOANS];
+    /**
+     * Months passed since the beginning of the simulation
+     * 
+     * Defaults to 1
+     */
+    private int monthsPassed = 1;
 
-    private final int n = 100; // número de empréstimos
-    private Loan[] activeLoans = new Loan[n]; // vetor que armazena todos os empréstimos ativos
-    private Loan[] payedLoans = new Loan[n]; // vetor que armazena todos os empréstimos pagos
-    private int timePassed = 1; // tempo passado em meses,
-                                // inicializa em 1 pois presume-se já ter passado um mês desde os empréstimos
-
-    public Problem1() { // construtor
-        generateLoans(); // gera os empréstimos
+    /**
+     * Constructor
+     * Initializes the loans with different rates
+     * 
+     * @see Loan
+     * @see generateLoans()
+     */
+    public Problem1() {
+        generateLoans(AMOUNT_OF_LOANS);
     }
 
-    private void generateLoans() { // gera os empréstimos
-        for (int i=0; i<n ; i++) { // cria n empréstimos com taxas de juros distintas
-            activeLoans[i] = new Loan(i, 1.001 + (i * 0.001)); // '2.' para a soma ser de valores Double
-            /* taxa de juros é relativa aos juros para garantir que todas as taxas sejam distintas
-               e '+2' é para garantir que todas as taxas sejam >1 */
-        }
+    /**
+     * Creates N loans with different rates
+     * 
+     * @param amount number of loans to be created
+     */
+    private void generateLoans(int amount) {
+        for (int i = 0; i < amount ; i++)
+            ACTIVE_LOANS[i] = new Loan(i, 1.001 + (i * 0.001));
     }
 
-    private Loan getTargetLoan() { // procura o empréstimo com maior taxa de juros
+    
+    /**
+     * Gets the loan with the highest rate
+     * 
+     * @return the loan with the highest rate
+     * 
+     * @see Loan
+     */
+    private Loan getHighestRateLoan() {
         System.out.println("Procurando pelo empréstimo que será pago este mês...");
-        Loan targetLoan = activeLoans[0]; // inicializa o empréstimo com maior taxa de juros com o primeiro empréstimo
+        
+        Loan highestRateLoan = ACTIVE_LOANS[0];
+        for (int i = 1; i < ACTIVE_LOANS.length; i++)
+            /**
+             * If there is a current loan and its rate is higher than the highest loan's rate, then the current loan is the new target loan
+             */
+            if ((ACTIVE_LOANS[i] != null) && (ACTIVE_LOANS[i].getRate() > highestRateLoan.getRate()))
+                highestRateLoan = ACTIVE_LOANS[i];
+        return highestRateLoan;
 
-        for (int i=1; i<activeLoans.length ; i++) { // percorre todos os empréstimos
-            if ((activeLoans[i] != null) && (activeLoans[i].getRate() > targetLoan.getRate())) { 
-                // se a taxa de juros do empréstimo atual for maior
-                targetLoan = activeLoans[i]; // então, o empréstimo atual é o com maior taxa de juros
-            }
+        /**
+         * Sabe-se que, pelo jeito que os empréstimos foram gerados, a maior taxa sempre será a última, o que faria com que o código fosse O(1) com o código abaixo:
+         * private Loan getHighestRateLoan() {
+         *  return ACTIVE_LOANS[n-1];
+         * }
+         * Mas estamos considerando casos mais genéricos. 
+        */
+    }
+
+    /**
+     * Pays a loan
+     * 
+     * @param id loan's unique identifier
+     * 
+     * @see Loan
+     */
+    private void payLoan(int id) {
+        /**
+         * If the loan has already been payed, then do nothing
+         */
+        if ((ACTIVE_LOANS[id] == null) || (ACTIVE_LOANS[id].getStatus() == Loan.STATUS.PAYED)) {
+            System.out.printf("Empréstimo [%d] já foi pago.\n", id);
+            return;
         }
-        return targetLoan; // retorna o empréstimo com maior taxa de juros
 
-        /* sabe-se que, pelo jeito que os empréstimos foram gerados, a maior taxa sempre será a última,
-           o que faria com que o código fosse O(1) com o código abaixo:
-           private Loan getTargetLoan() {
-            return activeLoans[n-1];
-           }
-           mas estamos considerando casos mais genéricos. */
+        System.out.printf("Pagando empréstimo [%d] no valor de %.2f\n", id, ACTIVE_LOANS[id].getLoanValue(monthsPassed));
+        /**
+         * Inserts the payed loan into the payed loans array
+         */
+        PAYED_LOANS[id] = ACTIVE_LOANS[id];
+        /**
+         * Removes the payed loan from the active loans array
+         */
+        ACTIVE_LOANS[id] = null;
+        /**
+         * Pays the loan (changes its status to PAYED)
+         */
+        PAYED_LOANS[id].payLoan();
     }
 
-    private void payLoan(int id) { // paga um empréstimo de acordo com o id
-        if ((activeLoans[id] == null) || (activeLoans[id].getStatus() == Loan.STATUS.PAYED)) {
-            // se o empréstimo já foi pago
-            System.out.println("Empréstimo [" + id + "] já foi pago."); // então, não faz nada
-            return; // termina a execução do método antes de tentar pagar novamente
-        }
-        System.out.println("Pagando empréstimo [" + id + "] no valor de " + activeLoans[id].getLoanValue(timePassed));
-        // imprime o empréstimo que está sendo pago
-        payedLoans[id] = activeLoans[id]; // adiciona o empréstimo pago ao vetor de empréstimos pagos
-        activeLoans[id] = null; // remove o empréstimo pago do vetor de empréstimos ativos
-        payedLoans[id].payLoan(); // muda o status do empréstimo para pago
+    /**
+     * Ends a month
+     * Increments the months passed counter
+     */
+    private void endMonth() {
+        monthsPassed++;
+        System.out.printf("Um mês se passou. Agora estamos no mês %d\n", monthsPassed);
     }
-
-    private void passTime() {
-        timePassed++; // passa o tempo em um mês
-        System.out.println("Um mês se passou. Agora estamos no mês " + timePassed + "\n");
-    }
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     public static void main(String[] args) {
-        Problem1 problem1 = new Problem1(); // cria um objeto da classe Problem1
-        Loan targetLoan; // cria um objeto da classe Loan para armazenar o empréstimo com maior taxa de juros
-
-        while (problem1.activeLoans[0] != null) { // enquanto houver empréstimos ativos
-            targetLoan = problem1.getTargetLoan(); // procura o empréstimo com maior taxa de juros
-            problem1.payLoan(targetLoan.getId()); // paga o empréstimo com maior taxa de juros
-            problem1.passTime(); // passa o tempo em um mês
+        Problem1 problem1 = new Problem1();
+        Loan highestRateLoan;
+        
+        /**
+         * While there are active loans, pay the loan with the highest rate and end the month
+         */
+        while (problem1.ACTIVE_LOANS[0] != null) {
+            highestRateLoan = problem1.getHighestRateLoan();
+            problem1.payLoan(highestRateLoan.getId());
+            problem1.endMonth();
         }
         System.out.println("Todos os empréstimos foram pagos.");
     }
