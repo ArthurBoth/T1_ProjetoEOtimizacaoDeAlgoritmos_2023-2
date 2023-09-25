@@ -25,7 +25,7 @@ public class Problem1 {
         algoritmo deve ser polinomial em 'n'.
      */
 
-    private final int n = 10; // número de empréstimos
+    private final int n = 100; // número de empréstimos
     private Loan[] activeLoans = new Loan[n]; // vetor que armazena todos os empréstimos ativos
     private Loan[] payedLoans = new Loan[n]; // vetor que armazena todos os empréstimos pagos
     private int timePassed = 1; // tempo passado em meses,
@@ -37,7 +37,7 @@ public class Problem1 {
 
     private void generateLoans() { // gera os empréstimos
         for (int i=0; i<n ; i++) { // cria n empréstimos com taxas de juros distintas
-            activeLoans[i] = new Loan(i, i + 1.1); // '2.' para a soma ser de valores Double
+            activeLoans[i] = new Loan(i, 1.001 + (i * 0.001)); // '2.' para a soma ser de valores Double
             /* taxa de juros é relativa aos juros para garantir que todas as taxas sejam distintas
                e '+2' é para garantir que todas as taxas sejam >1 */
         }
@@ -77,8 +77,8 @@ public class Problem1 {
     }
 
     private void passTime() {
-        System.out.println("Um mês se passou.\n");
         timePassed++; // passa o tempo em um mês
+        System.out.println("Um mês se passou. Agora estamos no mês " + timePassed + "\n");
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
