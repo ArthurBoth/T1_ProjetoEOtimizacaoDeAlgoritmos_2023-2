@@ -29,11 +29,11 @@ public class Loan {
         //Math.pow é O(1)
     }
 
-    public STATUS getStatus() {
-        return status;
+    public STATUS getStatus() { // getter do status do empréstimo
+        return status; // retorna o status do empréstimo
     }
 
-    public void payLoan() {
-        this.status = STATUS.PAYED;
+    public void payLoan() { // muda o status do empréstimo para pago
+        this.status = STATUS.PAYED; // muda o status do empréstimo para pago
     }
 }

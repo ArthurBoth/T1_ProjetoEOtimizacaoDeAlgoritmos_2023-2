@@ -64,8 +64,9 @@ public class Problem1 {
     }
 
     private void payLoan(int id) { // paga um empréstimo de acordo com o id
-        if (activeLoans[id] == null) {
-            System.out.println("Empréstimo [" + id + "] já foi pago."); // se o empréstimo já foi pago, não faz nada
+        if ((activeLoans[id] == null) || (activeLoans[id].getStatus() == Loan.STATUS.PAYED)) {
+            // se o empréstimo já foi pago
+            System.out.println("Empréstimo [" + id + "] já foi pago."); // então, não faz nada
             return; // termina a execução do método antes de tentar pagar novamente
         }
         System.out.println("Pagando empréstimo [" + id + "] no valor de " + activeLoans[id].getLoanValue(timePassed));
