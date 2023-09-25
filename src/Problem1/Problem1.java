@@ -1,3 +1,5 @@
+package Problem1;
+
 public class Problem1 {
 
     /*
@@ -5,7 +7,7 @@ public class Problem1 {
         diferentes modelos. O membro do time que era (sim ele não faz mais parte do grupo) responsável por
         finanças, contratou 'n' empréstimos no valor de $ 1000 cada de vários bancos diferentes.
 
-     O valor dos empréstimos fica mais caro de acordo com o passar do tempo: em particular, o empréstimo �
+     O valor dos empréstimos fica mais caro de acordo com o passar do tempo: em particular, o empréstimo 'j'
         aumenta por uma taxa de juros 'rj' > 1 em cada mês, onde 'rj' é um determinado parâmetro. Isso significa que
         se o empréstimo for pago daqui a 't' meses, vocês terão que devolver ao banco 1000 ∙ 'rj'.
 
@@ -21,5 +23,11 @@ public class Problem1 {
     
     public Problem1() {
 
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    public static void main (String[] args) {
+        System.out.println("Hello World!");
     }
 }
