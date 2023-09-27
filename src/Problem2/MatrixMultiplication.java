@@ -12,12 +12,14 @@ public abstract class MatrixMultiplication {
      * 
      * @param mn First matrix
      * @param np Second matrix
+     * 
      * @return Resulting matrix
+     * 
+     * @complexity O(n³)
      */
     public static Matrix conventionalMethod(Matrix mn, Matrix np) {
-        if (mn.getColumns() != np.getRows()) {
+        if (mn.getColumns() != np.getRows())
             throw new IllegalArgumentException("The number of columns of the first matrix must be equal to the number of rows of the second matrix");
-        }
 
         Matrix result = new Matrix(mn.getRows(), np.getColumns());
 
@@ -37,7 +39,10 @@ public abstract class MatrixMultiplication {
      * 
      * @param mn First matrix
      * @param np Second matrix
+     * 
      * @return Resulting matrix
+     * 
+     * @complexity O(n^(log7))
      */
     public static Matrix strassenMethod(Matrix mn, Matrix np) {
         if (mn.getColumns() != np.getRows())
@@ -60,8 +65,8 @@ public abstract class MatrixMultiplication {
         Matrix[][] submatricesMN = mn.split();
         Matrix[][] submatricesNP = np.split();
 
-        // Calculate 10 intermediate matrices
-        Matrix[] M = new Matrix[10];
+        // Calculate the 7 intermediate matrices
+        Matrix[] M = new Matrix[7];
         M[0] = strassenMethod(
             submatricesMN[0][0].add(submatricesMN[1][1]),
             submatricesNP[0][0].add(submatricesNP[1][1])

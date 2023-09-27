@@ -21,18 +21,23 @@ package Problem2;
 
 public class Problem2 {
     public static void main(String[] args) {
-        int[][] matrixMN = {
-            { 2, 2 },
-            { 2, 2 }
-        };
-        int[][] matrixNP = {
-            { 3, 3 },
-            { 3, 3 }
-        };
-        Matrix mn = new Matrix(8, 8, 0, 3);
+        // // Define 2x2 (Strassen approved) matrices
+        // int[][] matrixMN = {
+        //     { 2, 2 },
+        //     { 2, 2 }
+        // };
+        // int[][] matrixNP = {
+        //     { 3, 3 },
+        //     { 3, 3 }
+        // };
         // Matrix mn = new Matrix(matrixMN);
-        Matrix np = new Matrix(8, 8, 0, 3);
         // Matrix np = new Matrix(matrixNP);
+        // Define 4x4 (also Strassen approved) matrices
+        Matrix mn = new Matrix(4, 4, 2, 2);
+        Matrix np = new Matrix(4, 4, 3, 3);
+        // // Define 8x8 (also Strassen approved) matrices
+        // Matrix mn = new Matrix(8, 8, 0, 3);
+        // Matrix np = new Matrix(8, 8, 0, 3);
 
         System.out.println("\n\nMatrix MN:");
         System.out.println(mn);
@@ -41,8 +46,10 @@ public class Problem2 {
         System.out.println(np);
         
         System.out.println("\n\nConventional operation:");
+        // Start counting time and execute conventional method
         long startTime = System.nanoTime();
         Matrix conventionalOperation = MatrixMultiplication.conventionalMethod(mn, np);
+        // Stop counting time and print results
         long endTime = System.nanoTime();
         System.out.printf("Time elapsed: %d ns\n", endTime - startTime);
         System.out.println("Complexity: O(n³)");
@@ -50,8 +57,10 @@ public class Problem2 {
         System.out.println(conventionalOperation);
 
         System.out.println("\n\nStrassen operation:");
+        // Start counting time and execute Strassen's method
         startTime = System.nanoTime();
         Matrix strassenOperation = MatrixMultiplication.strassenMethod(mn, np);
+        // Stop counting time and print results
         endTime = System.nanoTime();
         System.out.printf("Time elapsed: %d ns\n", endTime - startTime);
         System.out.println("Complexity: O(n^~2.84)");

@@ -142,6 +142,11 @@ public class Matrix {
      * @complexity O(1)
      */
     public boolean isPowerOfTwo() {
+        // A number is a power of two if it has only one bit set
+        // So, if we subtract 1 from the number, all bits will be set except the one that was set before
+        // If we AND the number with the number minus one, the result will be zero if the number is a power of two
+        // Example: 8 (1000) - 1 = 7 (0111) -> 8 & 7 = 0
+        // Example: 7 (0111) - 1 = 6 (0110) -> 7 & 6 = 6 (0110)
         return (this.rows & (this.rows - 1)) == 0;
     }
 
