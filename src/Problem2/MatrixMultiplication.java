@@ -90,18 +90,6 @@ public abstract class MatrixMultiplication {
             submatricesMN[0][1].subtract(submatricesMN[1][1]),
             submatricesNP[1][0].add(submatricesNP[1][1])
         );
-        M[7] = strassenMethod(
-            submatricesMN[0][0].subtract(submatricesMN[1][0]),
-            submatricesNP[0][0].add(submatricesNP[0][1])
-        );
-        M[8] = strassenMethod(
-            submatricesMN[0][1],
-            submatricesNP[1][0].subtract(submatricesNP[0][0])
-        );
-        M[9] = strassenMethod(
-            submatricesMN[1][0],
-            submatricesNP[0][0].add(submatricesNP[0][1])
-        );
 
         Matrix[] resultSubmatrices = new Matrix[4];
         resultSubmatrices[0] = M[0].add(M[3]).subtract(M[4]).add(M[6]);

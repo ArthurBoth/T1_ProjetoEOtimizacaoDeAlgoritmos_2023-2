@@ -20,48 +20,20 @@ package Problem2;
  */
 
 public class Problem2 {
-    /**
-     * Makes two matrices and multiplies them
-     */
-    public Problem2(int n) {
-        Strassen m1 = new Strassen(n);
-        Strassen m2 = new Strassen(n);
-        System.out.println("Matriz 1: ");
-        System.out.println(new Matrix(m1.getMatrix()));
-        System.out.println("Matriz 2: ");
-        System.out.println(new Matrix(m2.getMatrix()));
-
-        System.out.println("Multiplication: ");
-        System.out.println(new Matrix(m1.multiplyMatrix(m2.getMatrix())));
-    }
     public static void main(String[] args) {
-        new Problem2(2);
-
-        // int[][] matrixMN = {
-        //     { 1, 2, 3, 13 },
-        //     { 4, 5, 6, 14 },
-        //     { 7, 8, 9, 15 },
-        //     { 10, 11, 12, 16 }
-        // };
         int[][] matrixMN = {
             { 2, 2 },
             { 2, 2 }
         };
-        // int[][] matrixNP = {
-        //     { 1, 2, 3, 13 },
-        //     { 4, 5, 6, 14 },
-        //     { 7, 8, 9, 15 },
-        //     { 10, 11, 12, 16 }
-        // };
         int[][] matrixNP = {
             { 3, 3 },
             { 3, 3 }
         };
-        // Matrix mn = new Matrix(2, 2, 0, 3);
-        Matrix mn = new Matrix(matrixMN);
-        // Matrix np = new Matrix(2, 2, 0, 3);
-        Matrix np = new Matrix(matrixNP);
-        
+        Matrix mn = new Matrix(8, 8, 0, 3);
+        // Matrix mn = new Matrix(matrixMN);
+        Matrix np = new Matrix(8, 8, 0, 3);
+        // Matrix np = new Matrix(matrixNP);
+
         System.out.println("\n\nMatrix MN:");
         System.out.println(mn);
         
