@@ -55,7 +55,6 @@ public class Problem1 {
      * Initializes the loans with different rates
      * 
      * @see Loan
-     * @see generateLoans()
      */
     public Problem1() {
         generateLoans(AMOUNT_OF_LOANS);
@@ -141,9 +140,12 @@ public class Problem1 {
     }
 
     public static void main(String[] args) {
+        long antes;
+        long depois;
         Problem1 problem1 = new Problem1();
         Loan highestRateLoan;
-        
+        antes = System.currentTimeMillis();
+
         /**
          * While there are active loans, pay the loan with the highest rate and end the month
          */
@@ -152,6 +154,9 @@ public class Problem1 {
             problem1.payLoan(highestRateLoan.getId());
             problem1.endMonth();
         }
+        depois = System.currentTimeMillis();
+
         System.out.println("Todos os empréstimos foram pagos.");
+        System.out.println(depois - antes + " Milliseconds");
     }
 }
