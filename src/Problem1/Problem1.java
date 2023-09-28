@@ -1,5 +1,7 @@
 package Problem1;
 
+import java.util.ArrayList;
+
 /**
  * This class is a Java implementation of problem #1 from the algorithm's project and optimization class
  * 
@@ -36,13 +38,13 @@ public class Problem1 {
      */
     private final int AMOUNT_OF_LOANS = 100;
     /**
-     * Array of active loans (not payed)
+     * Total amount of loans
      */
-    private final Loan[] ACTIVE_LOANS = new Loan[AMOUNT_OF_LOANS];
+    private double loanTotal = 0;
     /**
-     * Array of payed loans (already payed)
+     * Array of active loans
      */
-    private final Loan[] PAYED_LOANS = new Loan[AMOUNT_OF_LOANS];
+    private final ArrayList<Loan> LOANS = new ArrayList<Loan>(AMOUNT_OF_LOANS);
     /**
      * Months passed since the beginning of the simulation
      * 
@@ -56,102 +58,78 @@ public class Problem1 {
      * 
      * @see Loan
      * @see generateLoans()
+     * 
+     * @complexity O(n) + O(n log n) = O(n log n)
      */
     public Problem1() {
         generateLoans(AMOUNT_OF_LOANS);
+        orderLoans();
     }
 
     /**
      * Creates N loans with different rates
      * 
      * @param amount number of loans to be created
+     * 
+     * @see Loan
+     * 
+     * @complexity O(n)
      */
     private void generateLoans(int amount) {
-        for (int i = 0; i < amount ; i++)
-            ACTIVE_LOANS[i] = new Loan(i, 1.001 + (i * 0.001));
-    }
-
-    
-    /**
-     * Gets the loan with the highest rate
-     * 
-     * @return the loan with the highest rate
-     * 
-     * @see Loan
-     */
-    private Loan getHighestRateLoan() {
-        System.out.println("Procurando pelo empréstimo que será pago este mês...");
-        
-        Loan highestRateLoan = ACTIVE_LOANS[0];
-        for (int i = 1; i < ACTIVE_LOANS.length; i++)
-            /**
-             * If there is a current loan and its rate is higher than the highest loan's rate, then the current loan is the new target loan
-             */
-            if ((ACTIVE_LOANS[i] != null) && (ACTIVE_LOANS[i].getRate() > highestRateLoan.getRate()))
-                highestRateLoan = ACTIVE_LOANS[i];
-        return highestRateLoan;
-
-        /**
-         * Sabe-se que, pelo jeito que os empréstimos foram gerados, a maior taxa sempre será a última, o que faria com que o código fosse O(1) com o código abaixo:
-         * private Loan getHighestRateLoan() {
-         *  return ACTIVE_LOANS[n-1];
-         * }
-         * Mas estamos considerando casos mais genéricos. 
-        */
-    }
-
-    /**
-     * Pays a loan
-     * 
-     * @param id loan's unique identifier
-     * 
-     * @see Loan
-     */
-    private void payLoan(int id) {
-        /**
-         * If the loan has already been payed, then do nothing
-         */
-        if ((ACTIVE_LOANS[id] == null) || (ACTIVE_LOANS[id].getStatus() == Loan.STATUS.PAYED)) {
-            System.out.printf("Empréstimo [%d] já foi pago.\n", id);
-            return;
+        for (int i = 0; i < amount ; i++) {
+            Loan loan = new Loan(i + 1, 1.001 + (i * 0.001));
+            LOANS.add(loan);
         }
-
-        System.out.printf("Pagando empréstimo [%d] no valor de %.2f\n", id, ACTIVE_LOANS[id].getLoanValue(monthsPassed));
-        /**
-         * Inserts the payed loan into the payed loans array
-         */
-        PAYED_LOANS[id] = ACTIVE_LOANS[id];
-        /**
-         * Removes the payed loan from the active loans array
-         */
-        ACTIVE_LOANS[id] = null;
-        /**
-         * Pays the loan (changes its status to PAYED)
-         */
-        PAYED_LOANS[id].payLoan();
     }
 
     /**
-     * Ends a month
-     * Increments the months passed counter
+     * Orders the loans by rate
+     * 
+     * @see Loan
+     * 
+     * @complexity O(n log n)
      */
-    private void endMonth() {
-        monthsPassed++;
-        System.out.printf("Um mês se passou. Agora estamos no mês %d\n", monthsPassed);
+    private void orderLoans() {
+        LOANS.sort((loan1, loan2) -> {
+            if (loan1.getRate() > loan2.getRate()) {
+                return -1;
+            } else if (loan1.getRate() < loan2.getRate()) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+    }
+
+    /**
+     * This method iterates, pays, and sums the total of the loans
+     * Since the loans are ordered by rate, the first loan in the array will always be the one with the highest rate
+     * 
+     * @see Loan
+     * 
+     * @complexity O(n)
+     */
+    public double payLoans() {
+        for (Loan loan : LOANS) {
+            System.out.println("Mês " + monthsPassed + ":");
+            System.out.println("Empréstimo " + loan.getId() + " pago.");
+            double loanValue = loan.getLoanValue(monthsPassed);
+            System.out.printf("Valor pago: R$%.4f\n", loanValue);
+            System.out.println("=========================================");
+            loanTotal += loanValue;
+            loan.payLoan();
+            monthsPassed++;
+        }
+        return loanTotal;
     }
 
     public static void main(String[] args) {
-        Problem1 problem1 = new Problem1();
-        Loan highestRateLoan;
-        
-        /**
-         * While there are active loans, pay the loan with the highest rate and end the month
-         */
-        while (problem1.ACTIVE_LOANS[0] != null) {
-            highestRateLoan = problem1.getHighestRateLoan();
-            problem1.payLoan(highestRateLoan.getId());
-            problem1.endMonth();
-        }
+        long startTime = System.currentTimeMillis();
+        double loanTotal = new Problem1().payLoans();
+        long endTime = System.currentTimeMillis();
         System.out.println("Todos os empréstimos foram pagos.");
+        System.out.printf("Valor total gasto: R$%.2f\n", loanTotal);
+        System.out.println("Tempo de execução: " + (endTime - startTime) + "ms");
+        System.out.println("Complexidade = O(n log n) + O(n) = O(n log n)");
     }
 }
